@@ -1,6 +1,6 @@
 include:
-  byobu.installed
+  - byobu.installed
 
 byobu:
   require:
-    - byobu.installed
+    - sls: byobu.installed

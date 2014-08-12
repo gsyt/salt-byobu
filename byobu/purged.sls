@@ -12,18 +12,26 @@ byobu.purged:
   {% if users %}
   require:
   {% for user in users %}
-    - byobu-disable-{{ user }}
-    - byobu-purgeconfig-{{ user }}
+    - sls: byobu-disable-{{ user }}
+    - sls: byobu-purgeconfig-{{ user }}
   {% endfor %}
   {% endif %}
 
 {% for user in users %}
 {% set userhome = salt['user.info'](user).home %}
-byobu-enable-{{ user }}:
+byobu-bash_profile-{{ user }}:
+  file.managed:
+    - name: {{ userhome }}/.bash_profile
+    - user: {{ user }}
+    - mode: 644
+
+byobu-disable-{{ user }}:
   file.sed:
     - name: {{ userhome }}/.bash_profile
     - before: _byobu_sourced=1 . /usr/bin/byobu-launch
     - after: ''
+  require:
+    - sls: byobu-bash_profile-{{ user }}
 
 byobu-purgeconfig-{{ user }}:
   file.absent:

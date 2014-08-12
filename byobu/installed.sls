@@ -13,9 +13,9 @@ byobu.installed:
   require:
   {% for user in users %}
   {% if enable == True %}
-    - byobu-enable-{{ user }}
+    - sls: byobu-enable-{{ user }}
   {% endif %}
-    - byobu-tmuxconf-{{ user }}
+    - sls: byobu-tmuxconf-{{ user }}
   {% endfor %}
   {% endif %}
 
