@@ -35,7 +35,12 @@ byobu-config-{{ user }}:
     - name: {{ userhome }}/.byobu
     - user: {{ user }}
     - group: {{ user }}
-    - mode: 655
+    - dir_mode: 755
+    - file_moe: 644
+    - recurse:
+      - user
+      - group
+      - mode
 
 byobu-tmuxconf-{{ user }}:
   file.symlink:
