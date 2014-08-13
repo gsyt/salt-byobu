@@ -25,6 +25,8 @@ byobu.installed:
 byobu-enable-{{ user }}:
   file.append:
     - name: {{ userhome }}/.bash_profile
+    - user: {{ user }}
+    - group: {{ user }}
     - text: _byobu_sourced=1 . /usr/bin/byobu-launch
 {% endif %}
 
@@ -32,12 +34,15 @@ byobu-config-{{ user }}:
   file.directory:
     - name: {{ userhome }}/.byobu
     - user: {{ user }}
+    - group: {{ user }}
     - mode: 655
 
 byobu-tmuxconf-{{ user }}:
   file.symlink:
     - name: {{ userhome }}/.byobu/.tmux.conf
     - target: {{ userhome }}/.tmux.conf
+    - user: {{ user }}
+    - group: {{ user }}
     - force: True
     - require:
       - file: byobu-config-{{ user }}
