@@ -21,7 +21,12 @@ byobu.installed:
     - sls: byobu-config-{{ user }}
       {% if 1 == salt['cmd.retcode']('test -f ' ~ userhome ~ '/.byobu.conf') %}
     - sls: byobu-tmuxconf-{{ user }}
+      {% endif %}
+    {% endfor %}
 
+    {% for user in config.users %}
+      {% set userhome = salt['user.info'](user).home %}
+      {% if 1 == salt['cmd.retcode']('test -f ' ~ userhome ~ '/.byobu.conf') %}
 byobu-tmuxconf-{{ user }}:
   file.symlink:
     - name: {{ userhome }}/.byobu/.tmux.conf
@@ -44,6 +49,7 @@ byobu-config-{{ user }}:
       - user
       - group
       - mode
+      {% endif %}
     {% endfor %}
   {% endif %}
 {% endif %}

@@ -5,7 +5,7 @@ Salt formula to set up and configure [byobu](http://byobu.co)
 
 Parameters
 ------------
-Please refer to example.pillar for a list of available pillar configuration options
+Please refer to example.pillar.sls for a list of available pillar configuration options
 
 Usage
 -----
