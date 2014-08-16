@@ -1,35 +1,28 @@
-{%- set os = salt['grains.get']('os') -%}
-{%- set users = salt['pillar.get']('byobu:users', []) -%}
-{%- set pkgdefault = { 
-  'Ubuntu': 'byobu', 
-  'CentOS': 'byobu' } -%}
-{%- set pkgname = salt['pillar.get']('byobu:pkg:' ~ os, pkgdefault[os]) -%}
-{%- set enable = salt['pillar.get']('byobu:enable', False) -%}
+{% from "byobu/map.jinja" import byobu with context %}
+
+{% set package = {
+  'upgrade': salt['pillar.get']('byobu:package:upgrade', False),
+} %}
+
+{% set config = {
+  'manage': salt['pillar.get']('byobu:config:manage', False),
+  'users': salt['pillar.get']('byobu:config:users', []),
+  'source': salt['pillar.get']('byobu:config:source', 'salt://byobu/conf/.byobu.conf'),
+} %}
 
 byobu.installed:
   pkg.latest:
-    - name: {{ pkgname }}
-  {% if users %}
+    - name: {{ byobu.package }}
+{% if config.manage %}
+  {% if config.users %}
   require:
+    {% for user in config.users %}
+    - sls: byobu-byobuconf-{{ user }}
+    {% endfor %}
+  {% endif %}
+
   {% for user in users %}
-  {% if enable == True %}
-    - sls: byobu-enable-{{ user }}
-  {% endif %}
-    - sls: byobu-tmuxconf-{{ user }}
-  {% endfor %}
-  {% endif %}
-
-{% for user in users %}
-{% set userhome = salt['user.info'](user).home %}
-{% if enable == True %}
-byobu-enable-{{ user }}:
-  file.append:
-    - name: {{ userhome }}/.bash_profile
-    - user: {{ user }}
-    - group: {{ user }}
-    - text: _byobu_sourced=1 . /usr/bin/byobu-launch
-{% endif %}
-
+    {% set userhome = salt['user.info'](user).home %}
 byobu-config-{{ user }}:
   file.directory:
     - name: {{ userhome }}/.byobu
@@ -42,13 +35,14 @@ byobu-config-{{ user }}:
       - group
       - mode
 
-byobu-tmuxconf-{{ user }}:
+byobu-byobuconf-{{ user }}:
   file.symlink:
-    - name: {{ userhome }}/.byobu/.tmux.conf
-    - target: {{ userhome }}/.tmux.conf
+    - name: {{ userhome }}/.byobu/.byobu.conf
+    - target: {{ userhome }}/.byobu.conf
     - user: {{ user }}
     - group: {{ user }}
     - force: True
     - require:
       - file: byobu-config-{{ user }}
-{% endfor %}
+  {% endfor %}
+{% endif %}

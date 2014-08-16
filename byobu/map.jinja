@@ -1,0 +1,8 @@
+{% set byobu = salt['grains.filter_by']( {
+  'Debian': {
+    'package': 'byobu',
+  },
+  'RedHat': {
+    'package': 'byobu',
+  },
+}, merge=salt['pillar.get']('byobu:lookup')) %}
