@@ -3,13 +3,9 @@ salt-byobu
 
 Salt formula to set up and configure [byobu](http://byobu.co)
 
-Requirements
+Parameters
 ------------
-The following pillars are available for configuration:
-  * byobu:pkg:salt['pillar.get']('os')
-  * byobu:users
-  * byobu:enable
-Pacakge 'byobu' (or 'byobu:pkg:salt['pillar.get']('os')') must be available from configured repos
+Please refer to example.pillar for a list of available pillar configuration options
 
 Usage
 -----

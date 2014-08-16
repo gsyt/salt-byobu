@@ -1,0 +1,9 @@
+byobu:
+  package:
+    upgrade: False
+  config:
+    manage: False
+    users:
+      - root
+  lookup:
+    package: byobu
