@@ -11,7 +11,7 @@
 } %}
 
 byobu.installed:
-  pkg.latest:
+  pkg.{{ 'latest' if package.upgrade else 'installed' }}:
     - name: {{ byobu.package }}
 {% if config.manage %}
   {% if config.users %}
