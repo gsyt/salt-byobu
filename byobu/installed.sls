@@ -36,7 +36,6 @@ byobu-tmuxconf-{{ user }}:
     - force: True
     - require:
       - file: byobu-config-{{ user }}
-      {% endif %}
 
 byobu-config-{{ user }}:
   file.directory:
