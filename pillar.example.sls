@@ -1,15 +1,10 @@
-groups:
-  - wheel
-  - sudo
-  - users
-
-users:
-  root:
-    present: True
-    password: xxxxxxx
-    shell: /bin/bash
-    groups:
+byobu:
+  package:
+    upgrade: False
+  config:
+    manage: False
+    users:
       - root
-    sshpubkeys:
-      - AAAA...
-      - AAAA...
+    source: salt://byobyu/conf/.tmux.conf
+  lookup:
+    - package: byobu
