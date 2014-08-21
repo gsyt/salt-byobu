@@ -7,7 +7,7 @@
 {% set config = {
   'manage': salt['pillar.get']('byobu:config:manage', False),
   'users': salt['pillar.get']('byobu:config:users', []),
-  'source': salt['pillar.get']('byobu:config:source', 'salt://byobu/conf/.byobu.conf'),
+  'source': salt['pillar.get']('byobu:config:source', 'salt://byobu/conf/tmux.conf'),
 } %}
 
 byobu.installed:
@@ -18,19 +18,16 @@ byobu.installed:
   require:
     {% for user in config.users %}
       {% set userhome = salt['user.info'](user).home %}
-    - sls: byobu-config-{{ user }}
-      {% if 1 == salt['cmd.retcode']('test -f ' ~ userhome ~ '/.byobu.conf') %}
     - sls: byobu-tmuxconf-{{ user }}
       {% endif %}
     {% endfor %}
 
     {% for user in config.users %}
       {% set userhome = salt['user.info'](user).home %}
-      {% if 1 == salt['cmd.retcode']('test -f ' ~ userhome ~ '/.byobu.conf') %}
 byobu-tmuxconf-{{ user }}:
-  file.symlink:
+  file.managed:
     - name: {{ userhome }}/.byobu/.tmux.conf
-    - target: {{ userhome }}/.tmux.conf
+    - source: {{ config.source }}
     - user: {{ user }}
     - group: {{ user }}
     - force: True
