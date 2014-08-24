@@ -11,19 +11,26 @@
 } %}
 
 byobu.installed:
+  require:
+    - sls: byobu.install
+    - sls: byobu.configure
+
+byobu.install:
   pkg.{{ 'latest' if package.upgrade else 'installed' }}:
     - name: {{ byobu.package }}
+
+byobu.configure:
+  require:
+    - sls: byobu.install
 {% if config.manage %}
   {% if config.users %}
-  require:
     {% for user in config.users %}
-      {% set userhome = salt['user.info'](user).home %}
     - sls: byobu-tmuxconf-{{ user }}
-      {% endif %}
     {% endfor %}
 
     {% for user in config.users %}
-      {% set userhome = salt['user.info'](user).home %}
+      {% if salt['user.info'](user) %}
+        {% set userhome = salt['user.info'](user).home %}
 byobu-tmuxconf-{{ user }}:
   file.managed:
     - name: {{ userhome }}/.byobu/.tmux.conf
