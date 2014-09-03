@@ -9,9 +9,9 @@ Please refer to example.pillar.sls for a list of available pillar configuration 
 
 Usage
 -----
-Apply state 'byobu.install' to install tmux to target minions
-Apply state 'byobu.purge' to remove tmux from target minions
-State 'tmux' is provided as an alias for 'byobu.install'
+- Apply state 'byobu.install' to install tmux to target minions
+- Apply state 'byobu.purge' to remove tmux from target minions
+- State 'tmux' is provided as an alias for 'byobu.install'
 
 Compatibility
 -------------
