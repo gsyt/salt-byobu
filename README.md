@@ -11,7 +11,7 @@ Usage
 -----
 - Apply state 'byobu.install' to install tmux to target minions
 - Apply state 'byobu.purge' to remove tmux from target minions
-- State 'tmux' is provided as an alias for 'byobu.install'
+State 'tmux' is provided as an alias for 'byobu.install'
 
 Compatibility
 -------------
